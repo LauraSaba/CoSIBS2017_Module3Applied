@@ -1,0 +1,49 @@
+---
+title: "Chapter 10 - The Gaussian Distribution (TEMPLATE)"
+author: "Laura Saba"
+date: "July 11, 2017"
+output: html
+---
+
+
+## THE NATURE OF THE GAUSSIAN DISTRIBUTION
+Symmetrical Bell-Shapped Distribution
+
+```{r,echo=FALSE}
+rm(list=ls())
+options(stringsAsFactors=FALSE)
+
+library(RColorBrewer)
+
+x=seq(-5,5,by=0.1)
+plot(x,dnorm(x),type="l",ylim=c(0,0.8),xlim=c(-5,5),ylab="Density",col=brewer.pal(3,"Set1")[1],lwd=3)
+points(x,dnorm(x,mean=0,sd=0.5),type="l",col=brewer.pal(3,"Set1")[2],lwd=3)
+points(x,dnorm(x,mean=0,sd=2),type="l",col=brewer.pal(3,"Set1")[3],lwd=3)
+legend(2,0.8,legend=c("mean=0, SD=1","mean=0, SD=0.5","mean=0, SD=2"),col=brewer.pal(3,"Set1"),lwd=3)
+```
+
+##Many random factors
+When many (independent) random factor contribute to an observed value, the observed values tend to follow Gaussian distribution.
+
+```{r}
+true_value = 10
+e1 = runif(100000) - 0.5
+e2 = runif(100000) - 0.5
+e3 = runif(100000) - 0.5
+e4 = runif(100000) - 0.5
+e5 = runif(100000) - 0.5
+
+values = true_value + e1 + e2 + e3 + e4 + e5
+head(round(values,2))
+tail(round(values,2))
+```
+
+##Result of many random factors contributing
+
+```{r,echo=FALSE}
+library(RColorBrewer)
+hist(values,freq = FALSE,ylim=c(0,0.8))
+points(seq(7,13,by=0.01),dnorm(seq(7,13,by=0.01),mean=mean(values),sd=sd(values)),type="l",col=brewer.pal(3,"Set1")[1],lwd=3)
+```
+
+

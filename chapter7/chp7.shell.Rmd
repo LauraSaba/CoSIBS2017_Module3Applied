@@ -1,0 +1,67 @@
+---
+title: "Chapter 7 - Graphing Continuous Data"
+author: "Laura Saba"
+date: "July 10, 2017"
+output: html
+---
+
+
+Table 7.1.  The body temperature of 12 individuals in degrees centigrade.
+Motulsky 2014 p. 62
+
+```{r}
+rm(list=ls())
+options(stringsAsFactors = FALSE)
+
+bodyTemp = c(37.0,36.0,37.1,37.1,36.2,37.3,
+             36.8,37.0,36.3,36.9,36.7,36.8)
+```
+
+
+
+Example of a typo
+
+```{r}
+bodyTemp2 = c(37.0,36.0,37.1,371,36.2,37.3,
+             36.8,37.0,36.3,36.9,36.7,36.8)
+```
+
+
+
+
+Creating function to calculate mode 
+
+```{r}
+modeDist = function(a){
+  cnts = table(a)
+  max.cnts = cnts[cnts==max(cnts)]
+  output = names(max.cnts)
+  return(output)
+}
+
+modeDist(bodyTemp)
+```
+
+
+Scatterplots/Dot plot in R - Example Code
+
+```{r,eval=FALSE}
+plot(jitter(rep(0,length(bodyTemp)),amount=0.05), 
+     bodyTemp,
+     xlim=range(-1,1),
+     ylim=range(35.5,37.5),
+     axes=FALSE,
+     frame.plot=TRUE,
+     xlab="",
+     pch=20,
+     cex=2)
+axis(2, seq(35.5,37.5,by=0.5))
+segments(-0.2, mean(bodyTemp), 0.2, mean(bodyTemp), lwd=3)
+```
+
+Create a bigger data set
+```{r,echo=FALSE}
+set.seed(283947)
+bigData = rnorm(130,mean=mean(bodyTemp),sd=sd(bodyTemp))
+```
+

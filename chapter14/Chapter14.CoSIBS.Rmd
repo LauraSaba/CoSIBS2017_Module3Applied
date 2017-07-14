@@ -1,0 +1,114 @@
+---
+title: "Chapter 14 - Error Bars"
+author: "Laura Saba"
+date: "July 14, 2017"
+output: beamer_presentation
+---
+
+##What this chapter covers
+
+- SD versus SEM
+- Which kind of error bar should I plot?
+- The appearance of error bars
+- How are SD and SEM related to sample size?
+- Common mistakes: error bars
+
+##SD VERSUS SEM
+- standard deviation, SD, quantifies variation among values
+- standard error of the mean (SEM), or just standard error, quantifies how preciesly you know the population mean
+    - $SEM = \frac{SD}{\sqrt n}$
+- the SD will always be larger than the SEM
+- SD can be computed from the SEM
+    - $SD = SEM \times \sqrt n$
+    
+##WHICH KIND OF ERROR BAR SHOULD I PLOT?
+**Goal: To show the variation among values**
+
+- use SD
+- Often a box plot or histogram may be more informative though
+  
+**Goal: To show how precisely you have determined the population mean**
+
+- use SEM
+- Often a 95% CI may be more informative
+
+##THE APPEARANCE OF ERROR BARS
+```{r,echo=FALSE}
+rm(list=ls())
+options(stringsAsFactors=FALSE)
+library(RColorBrewer)
+ageGuess = read.table(file="~/Documents/Teaching/BIOS6670 - CoSIBS/ageGuess.2017-07-12.txt",sep="\t",header=TRUE)
+sdBB = sd(ageGuess$Bruce.Benson)
+mBB = mean(ageGuess$Bruce.Benson)
+
+par(mar=c(5, 5, 4, 2) + 0.1)
+x=barplot(c(NA,NA,mean(ageGuess$Bruce.Benson),mean(ageGuess$Bruce.Benson)),ylim=c(60,80),xpd=FALSE,cex.axis = 2,ylab="Age Guessed for Bruce Benson (years)",cex.lab=2)
+points(x[c(1,2)],rep(mean(ageGuess$Bruce.Benson),2),pch=20)
+segments(x[c(1,2,4)],mBB+sdBB,x[c(1,2,4)],mBB-sdBB)
+segments(x[3],mBB+sdBB,x[3],mBB)
+segments(x[c(1,3,4)]-0.3,mBB+sdBB,x[c(1,3,4)]+0.3,mBB+sdBB)
+segments(x[c(1,4)]-0.3,mBB-sdBB,x[c(1,4)]+0.3,mBB-sdBB)
+```
+
+##Plotting Error Bars in R
+```{r,echo=FALSE}
+meanAges = colMeans(ageGuess)
+semAges = apply(ageGuess,2,function(a) sd(a)/sqrt(nrow(ageGuess)))
+```
+
+```{r,eval=FALSE}
+# Create Histogram
+x_values = barplot(meanAges,ylim=c(30,70),xpd=FALSE,
+                   cex.axis=2,cex.lab=2,cex.names=2,
+                   ylab = "Mean Age Estimates with SEM")
+# Draw vertical part of error bar
+segments(x_values,meanAges+semAges,
+         x_values,meanAges-semAges)
+# Draw top and bottom caps
+segments(x_values-0.3,meanAges+semAges,
+         x_values+0.3,meanAges+semAges)
+segments(x_values-0.3,meanAges-semAges,
+         x_values+0.3,meanAges-semAges)
+```
+
+##Plotting Error Bars in R
+
+```{r,echo=FALSE}
+# Create Histogram
+par(mar=c(5, 5, 4, 2) + 0.1)
+x_values = barplot(meanAges,ylim=c(30,80),xpd=FALSE,
+                   cex.axis=2,cex.lab=2,cex.names=2,
+                   ylab = "Mean Age Estimates with SEM")
+# Draw vertical part of error bar
+segments(x_values,meanAges+semAges,
+         x_values,meanAges-semAges)
+# Draw top and bottom caps
+segments(x_values-0.3,meanAges+semAges,
+         x_values+0.3,meanAges+semAges)
+segments(x_values-0.3,meanAges-semAges,
+         x_values+0.3,meanAges-semAges)
+```
+
+
+
+##HOW ARE SD AND SEM RELATED TO SAMPLE SIZE?
+- If you increase the sample size, is the **SEM** expected to get larger, get smaller, or stay the same?
+    - It is expected to get smaller
+- If you increase the sample size, is the **SD** expected to get larger, get smaller, or stay the same?
+    - It is equally likely to get larger or to get smaller as the sample size increases.
+    
+##COMMON MISTAKES: ERROR BARS
+- Plotting mean and error bars instead of plotting a frequency distribution
+    - Often a frequency plot is more informative
+- Assuming that all distributions are Gaussian
+    - Often our first intuition is to assume the data are Gaussian when only a mean and SD are shown
+- Plotting a mean and error bar without defining how the error bars are computed
+
+##What did we learn
+- SD quantifies variation
+- SEM quantifies how precisely you know the population mean
+- SEM is always smaller than SD
+- Graphs are often plotted as means and error bars, which are usually either the SD or the SEM
+- You can calculate the SD from the SEM and n
+- Sometimes, the choice of SD or SEM is based on traditions in a particular field. Often, SEMs are chosen simply because they are smaller.
+- Graphs with error bars should always indicate whether they are SD, SEM, or something else.

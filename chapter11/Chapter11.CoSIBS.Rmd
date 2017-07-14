@@ -1,0 +1,135 @@
+---
+title: "Chapter 11 - The Lognormal Distribution and the Geometirc Mean"
+author: "Laura Saba"
+date: "July 12, 2017"
+output: beamer_presentation
+---
+
+##What this chapter covers
+
+- The origin of a lognormal distribution
+- How to analyze lognormal data
+- Geometric mean
+- Common mistakes: Lognormal distribution
+
+##THE ORIGIN OF A LOGNORMAL DISTRIBUTION
+
+- When many independent factors influence a measured value in an additive fashion, the measured values are likely to follow a *normal distribution*.
+- When many independent factos influence a measured value in a multiplicative fashion, the measured values are likely to follow a *lognormal distribution*.
+
+##THE ORIGIN OF A LOGNORMAL DISTRIBUTION
+
+```{r}
+true_value = 100
+n = 100000
+e1 = runif(n,1,2)^(sample(c(-1,1),n,replace=TRUE))
+e2 = runif(n,1,2)^(sample(c(-1,1),n,replace=TRUE))
+e3 = runif(n,1,2)^(sample(c(-1,1),n,replace=TRUE))
+e4 = runif(n,1,2)^(sample(c(-1,1),n,replace=TRUE))
+e5 = runif(n,1,2)^(sample(c(-1,1),n,replace=TRUE))
+values = true_value*e1*e2*e3*e4*e5
+head(round(e1,2))
+head(round(values,2))
+```
+
+##Result of many random factors contributing
+```{r,echo=FALSE}
+library(RColorBrewer)
+hist(values,freq = FALSE,ylim=c(0,0.01),breaks=1000)
+points(seq(0,2600,by=10),dlnorm(seq(0,2600,by=10),mean=mean(log(values)),sd=sd(log(values))),type="l",col=brewer.pal(3,"Set1")[1],lwd=3)
+```
+
+##Plotting on the logarithmic scale
+```{r,echo=FALSE,fig.height=5,fig.width=10}
+par(mfcol=c(1,2))
+plot(seq(1,5000,by=1),dlnorm(seq(1,5000,by=1),mean=5),type="l",col=brewer.pal(3,"Set1")[1],lwd=3,ylab="",xlab="",yaxt="n",frame.plot=FALSE)
+plot(seq(1,5000,by=1),dlnorm(seq(1,5000,by=1),mean=5),type="l",col=brewer.pal(3,"Set1")[1],lwd=3,log="x",ylab="",xlab="",yaxt="n",frame.plot=FALSE)
+```
+
+
+##Example Data - Figure 11.1
+```{r}
+EC50 = 10^c(1.5,2.2,2.4,2.6,2.62,2.8,3.1,3.05,3.9)
+```
+
+```{r,echo=FALSE,fig.height=5,fig.width=10}
+par(mfrow=c(1,3),mar=c(5, 5, 4, 2) + 0.1)
+
+## original scale
+plot(jitter(rep(0,length(EC50)),amount=0.05),
+     EC50,xlim=range(-1,1),pch=20,ylim=range(0,10000),
+     axes=FALSE,frame.plot=TRUE,xlab="",ylab="EC50 in nM",cex.lab=2)
+axis(2, seq(0,10000,by=1000),cex.axis=2)
+segments(-0.2, mean(EC50), 0.2, mean(EC50))
+
+## logged scale
+plot(jitter(rep(0,length(EC50)),amount=0.05),
+     log10(EC50),xlim=range(-1,1),pch=20,ylim=range(0,5),
+     axes=FALSE,frame.plot=TRUE,xlab="",ylab="log10(EC50 in nM)",cex.lab=2)
+axis(2, seq(0,5,by=1),cex.axis=2)
+segments(-0.2, mean(log10(EC50)), 0.2, mean(log10(EC50)))
+
+## logged axis
+plot(jitter(rep(0,length(EC50)),amount=0.05),
+     log10(EC50),xlim=range(-1,1),pch=20,ylim=range(0,5),
+     axes=FALSE,frame.plot=TRUE,xlab="",ylab="EC50 in nM",cex.lab=2)
+axis(2, at = sapply(c(1,10,100,1000,10000,100000),function(x) log10(x)),labels=c(1,10,100,1000,10000,100000),cex.axis=2)
+segments(-0.2, mean(log10(EC50)), 0.2, mean(log10(EC50)))
+```
+
+##Why logarithms?
+
+Properties of logarithms:
+
+- log(ab) = log(a) + log(b)
+- Logarithms convert multiplicative scatter (lognormal distribution) to additive scatter (Gaussian)
+
+##HOW TO ANALYZE LOGNORMAL DATA
+
+- Typically, the logged data is used for statistical analyses
+- Results (figures, tables, etc.) are transformed to the antilog to keep the magnitude of estimates interpretable
+
+##GEOMETRIC MEAN
+
+```{r,echo=FALSE,fig.height=4,fig.width=10}
+par(mfrow=c(1,3),mar=c(5, 5, 4, 2) + 0.1)
+
+## original scale
+plot(jitter(rep(0,length(EC50)),amount=0.05),
+     EC50,xlim=range(-1,1),pch=20,ylim=range(0,10000),
+     axes=FALSE,frame.plot=TRUE,xlab="",ylab="EC50 in nM",cex.lab=2)
+axis(2, seq(0,10000,by=1000),cex.axis=2)
+segments(-0.2, mean(EC50), 0.2, mean(EC50))
+
+## logged scale
+plot(jitter(rep(0,length(EC50)),amount=0.05),
+     log10(EC50),xlim=range(-1,1),pch=20,ylim=range(0,5),
+     axes=FALSE,frame.plot=TRUE,xlab="",ylab="log10(EC50 in nM)",cex.lab=2)
+axis(2, seq(0,5,by=1),cex.axis=2)
+segments(-0.2, mean(log10(EC50)), 0.2, mean(log10(EC50)))
+
+## logged axis
+plot(jitter(rep(0,length(EC50)),amount=0.05),
+     log10(EC50),xlim=range(-1,1),pch=20,ylim=range(0,5),
+     axes=FALSE,frame.plot=TRUE,xlab="",ylab="EC50 in nM",cex.lab=2)
+axis(2, at = sapply(c(1,10,100,1000,10000,100000),function(x) log10(x)),labels=c(1,10,100,1000,10000,100000),cex.axis=2)
+segments(-0.2, mean(log10(EC50)), 0.2, mean(log10(EC50)))
+```
+
+- For the 1st, the mean is indicated by the line.  This appears to be a bad summary of the central tendency of the data because only one value is greater than the mean and the remaining values are below the mean.
+- For the 2nd and 3rd graphs, the **geometric mean** is indicated by the line.  This is a much better summary of the central tendency of the data because close to equal numbers of values are above and below the line.
+
+##COMMON MISTAKES: LOGNORMAL DISTRIBUTION
+
+1. Being inconsistent with the use of common and natural logs
+    - the same base should be used for initially converting values to their logarithm and when taking the antilogarithm of the mean of the logged values
+2. Converting the data to logarithms when some values are zero or negative
+    - taking the log of zero will give a negative infinity value in R
+    - taking the log of a negative number will give a warning and NaN values in R
+   
+##What did we learn
+
+- Lognormal distributions are very common in many fields of science.
+- Lognormal distributions arise when multiple random factors are multiplied together to determine the value.  In contrast, Gaussian distributions arise when multiple random factors are added together.
+- Lognormal distributions have a long right tail (ie skewed right).
+- In most cases, the best way to analyze lognormal data is to take the logarithm of each value and then analyze those logarithms.

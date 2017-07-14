@@ -1,0 +1,79 @@
+---
+title: "Chapter 8 - Types of Variables"
+author: "Laura Saba"
+date: "July 10, 2017"
+output: beamer_presentation
+---
+
+What this chapter covers
+========================================================
+
+- Interval variables
+- Ratio variables
+- Other kinds of variables
+- Not quite as distinct as they seem
+
+INTERVAL VARIABLES
+================
+**Interval variable** - a continuous variable were a difference (i.e., interval) means the same thing all the way along the scale, no matter where you start
+
+- differences in interval variables is often meaningful
+
+For interval variables, the definition of zero is arbitrary.
+
+- this makes ratios irrelevant, e.g., 50 degrees Celcius is not twice as hot as 100 degress Celcius
+
+RATIO VARIABLES
+==============
+**Ratio variables** - continuous variables where a zero value is not arbitraty
+
+- differences and ratios of ratio variables can meaningful
+
+OTHER KINDS OF VARIABLES
+==================
+**Ordinal variables** - variables that express rank and therefore a difference does not mean the same thing all the way along the scale
+
+**Binomial variables** - have two possible outcomes, e.g., dead or alive
+
+**Nominal variables** - more than two possible values with no relevant ordering in values
+
+NOT QUITE AS DISTINCT AS THEY SEEM
+===========================
+There is lots of ambiguity in these definitions, so don't get too worked up.
+
+Contrary to the book, you won't be tested on this.
+
+Use common sense to think about appropriate graphics/analyses for your data and how you want to interpret the data.
+
+Calculations that are meaningful based on type of variable
+===================================
+
+```{r, echo=FALSE}
+rm(list=ls())
+library(knitr)
+library(pander)
+
+table8.1 = data.frame('OK TO COMPUTE' = c("Frequency distribution","Median and percentiles","Add or subtract","Ratio","Mean, Standard Deviation, Standard Error of Mean","Coefficient of variation"),NOMINAL = c("Yes","No","No","No","No","No"),ORDINAL=c("Yes","Yes","No","No","No","No"), INTERVAL=c("Yes","Yes","Yes","No","Yes","No"),RATIO=c("Yes","Yes","Yes","Yes","Yes","Yes"))
+colnames(table8.1)[1] = "OK TO COMPUTE"
+table8.1blank = table8.1
+table8.1blank[,2:5] = ""
+```
+
+```{r, echo=FALSE,eval=TRUE}
+pander(table8.1blank,align=rep("c",ncol(table8.1)),row.names=FALSE,split.cells=c("40%","15%","15%","15%","15%"), style="multiline")
+```
+
+Calculations that are meaningful based on type of variable
+===================================
+```{r, results='asis',echo=FALSE,eval=TRUE}
+pander(table8.1,align=rep("c",ncol(table8.1)),row.names=FALSE,split.cells=c("40%","15%","15%","15%","15%"))
+```
+
+
+What did we learned
+=====
+
+- Different kinds of variables require different kinds of analyses.
+- Continuous variables can be classified as interval, ratio, or ordinal.
+
+
